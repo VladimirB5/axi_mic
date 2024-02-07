@@ -1,0 +1,90 @@
+#!/bin/bash
+
+block_test() {
+  ghdl -a --std=08 rtl/triangle_gen.vhdl
+  ghdl -a --std=08 rtl/pdm.vhdl
+  ghdl -a --std=08 rtl/fir.vhdl
+  ghdl -a --std=08 rtl/capture.vhdl
+  ghdl -a --std=08 tb_block/tb_top.vhdl
+  ghdl -e --std=08 tb_top
+  ghdl -r --std=08 tb_top --wave=case1_tb.ghw
+}
+
+all_test() {
+  ghdl -a --std=08 rtl/axi_lite_regs_pkg.vhdl
+  ghdl -a --std=08 rtl/int_ctrl_mic.vhdl
+  ghdl -a --std=08 rtl/axi_lite_ctrl_regs.vhdl
+  ghdl -a --std=08 rtl/triangle_gen.vhdl
+  ghdl -a --std=08 rtl/pdm.vhdl
+  ghdl -a --std=08 rtl/fir.vhdl
+  ghdl -a --std=08 rtl/capture.vhdl
+  ghdl -a --std=08 rtl/audio_aquire.vhdl
+  ghdl -a --std=08 tb_vhdl/no_synth/clk_mux_mic.vhdl
+  ghdl -a --std=08 rtl/RAM_mic.vhdl
+  ghdl -a --std=08 rtl/synchronizer_vector.vhdl
+  ghdl -a --std=08 rtl/fifo_write.vhdl
+  ghdl -a --std=08 rtl/fifo_read.vhdl
+  ghdl -a --std=08 rtl/synchronizer.vhdl
+  ghdl -a --std=08 rtl/fifo.vhdl
+  ghdl -a --std=08 rtl/axi_hp_mic.vhdl
+  ghdl -a --std=08 rtl/axi_mic.vhdl
+  ghdl -a --std=08 tb_vhdl/tb_top_pkg.vhdl
+  ghdl -a --std=08 tb_vhdl/axi_lite_pkg.vhdl
+}
+
+basic_test() {
+  ghdl -a --std=08 tb_vhdl/basic_stimuli.vhdl
+  ghdl -a --std=08 tb_vhdl/tb_top.vhdl
+  ghdl -e --std=08 tb_top
+  ghdl -r --std=08 tb_top --wave=basic_tb.ghw
+}
+
+setup_test() {
+  ghdl -a --std=08 tb_vhdl/setup_stimuli.vhdl
+  ghdl -a --std=08 tb_vhdl/tb_top.vhdl
+  ghdl -e --std=08 tb_top
+  ghdl -r --std=08 tb_top --wave=setup_tb.ghw
+}
+
+start_stop_test() {
+  ghdl -a --std=08 tb_vhdl/start_stop_stimuli.vhdl
+  ghdl -a --std=08 tb_vhdl/tb_top.vhdl
+  ghdl -e --std=08 tb_top
+  ghdl -r --std=08 tb_top --wave=start_stop_tb.ghw
+}
+
+while getopts ":a:bc:" flag;do
+    #echo "flag -$flag, Argument $OPTARG";
+
+    case $flag in
+      b) echo "Starting block test..."
+         block_test
+       ;;
+
+      a)if [[ $OPTARG == "basic" ]]; then
+           echo "Starting basic test..."
+           all_test
+           basic_test
+        fi
+        if [[ $OPTARG == "setup" ]]; then
+           echo "Starting setup test..."
+           all_test
+           setup_test
+        fi
+        if [[ $OPTARG == "start_stop" ]]; then
+           echo "Starting start stop test..."
+           all_test
+           start_stop_test
+        fi
+       ;;
+    esac
+done
+
+
+#ghdl -a --std=08 rtl/triangle_gen.vhdl
+#ghdl -a --std=08 rtl/pdm.vhdl
+#ghdl -a --std=08 rtl/fir.vhdl
+#ghdl -a --std=08 rtl/capture.vhdl
+#ghdl -a --std=08 tb_block/tb_top.vhdl
+#ghdl -e --std=08 tb_top
+#ghdl -r --std=08 tb_top --wave=case1_tb.ghw
