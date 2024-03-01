@@ -3,9 +3,9 @@ USE IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.all;
 
 library work;
-use work.axi_lite_regs_pkg.all;
+use work.axi_lite_mic_regs_pkg.all;
 
-ENTITY axi_lite_ctrl_reg IS
+ENTITY axi_lite_mic_ctrl_reg IS
   port (
   -- Global signals
   ACLK    : IN std_logic;
@@ -50,9 +50,9 @@ ENTITY axi_lite_ctrl_reg IS
   -- interrupt
   mic_int : OUT std_logic
   ); 
-END ENTITY axi_lite_ctrl_reg;
+END ENTITY axi_lite_mic_ctrl_reg;
 
-ARCHITECTURE rtl OF axi_lite_ctrl_reg IS
+ARCHITECTURE rtl OF axi_lite_mic_ctrl_reg IS
   -- components
 COMPONENT int_ctrl_mic IS
   port (
@@ -93,7 +93,7 @@ END COMPONENT int_ctrl_mic;
   signal  sts_fin_clr_b_c, sts_fin_clr_b_s : std_logic;
   signal  sts_err_clr_c, sts_err_clr_s : std_logic;
   -- register form reg. bank
-  signal reg_c, reg_s : t_axi_lite_regs;
+  signal reg_c, reg_s : t_axi_lite_mic_regs;
 
   -- fsm read declaration
   TYPE t_read_state IS (R_IDLE, R_AREADY, R_VDATA);

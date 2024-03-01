@@ -4,10 +4,10 @@ USE IEEE.std_logic_1164.ALL;
 
 library work;
 -- Package Declaration Section
-package axi_lite_regs_pkg is
+package axi_lite_mic_regs_pkg is
   
   -- axi lite reg map registers
-  type t_axi_lite_regs is record
+  type t_axi_lite_mic_regs is record
     enable    : std_logic;
     run       : std_logic;
     chann_a   : std_logic_vector(31 downto 0);
@@ -16,9 +16,9 @@ package axi_lite_regs_pkg is
     int_ena   : std_logic;
     clk_mux   : std_logic;
     test_ena  : std_logic;
-  end record t_axi_lite_regs;
+  end record t_axi_lite_mic_regs;
 
-  constant C_AXI_LITE_REGS_INIT : t_axi_lite_regs :=
+  constant C_AXI_LITE_REGS_INIT : t_axi_lite_mic_regs :=
             (enable    => '0',
              run       => '0',
              chann_a   => (others => '0'),
@@ -40,4 +40,4 @@ package axi_lite_regs_pkg is
   CONSTANT  C_ADDR_TEST_CTRL : std_logic_vector(3 downto 0) := "1000";
   CONSTANT  C_ADDR_TEST_READ : std_logic_vector(3 downto 0) := "1001";
       
-end package axi_lite_regs_pkg;
+end package axi_lite_mic_regs_pkg;

@@ -67,7 +67,7 @@
 /* Use '81' as magic number */
 #define AXI_MIC_MAGIC 81
 
-#define SIGETX 44 // signal to user space 
+#define SIGETX 45 // signal to user space
 
 #define AXI_MIC_ENA           _IOW(AXI_MIC_MAGIC, 1, int)
 #define AXI_MIC_RUN           _IOW(AXI_MIC_MAGIC, 2, int)
