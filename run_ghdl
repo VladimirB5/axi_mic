@@ -11,9 +11,9 @@ block_test() {
 }
 
 all_test() {
-  ghdl -a --std=08 rtl/axi_lite_regs_pkg.vhdl
+  ghdl -a --std=08 rtl/axi_lite_mic_regs_pkg.vhdl
   ghdl -a --std=08 rtl/int_ctrl_mic.vhdl
-  ghdl -a --std=08 rtl/axi_lite_ctrl_regs.vhdl
+  ghdl -a --std=08 rtl/axi_lite_mic_ctrl_regs.vhdl
   ghdl -a --std=08 rtl/triangle_gen.vhdl
   ghdl -a --std=08 rtl/pdm.vhdl
   ghdl -a --std=08 rtl/fir.vhdl

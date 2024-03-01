@@ -229,7 +229,7 @@ COMPONENT axi_hp_mic IS
   );
 END COMPONENT axi_hp_mic;
 
-COMPONENT axi_lite_ctrl_reg IS
+COMPONENT axi_lite_mic_ctrl_reg IS
   port (
   -- Global signals
   ACLK    : IN std_logic;
@@ -274,7 +274,7 @@ COMPONENT axi_lite_ctrl_reg IS
   -- interrupt
   mic_int : OUT std_logic
   );
-END COMPONENT axi_lite_ctrl_reg;
+END COMPONENT axi_lite_mic_ctrl_reg;
 
 COMPONENT synchronizer is
     Port ( clk       : in  STD_LOGIC;
@@ -357,7 +357,7 @@ BEGIN
     full_w  => full_write
   );
 
-i_axi_lite_ctrl_reg : axi_lite_ctrl_reg
+i_axi_lite_mic_ctrl_reg : axi_lite_mic_ctrl_reg
   port map(
   -- Global signals
   ACLK    => clk_f,
