@@ -41,7 +41,6 @@ ENTITY axi_lite_mic_ctrl_reg IS
   chann_a     : OUT std_logic_vector(31 downto 0); -- address for buffer A
   chann_b     : OUT std_logic_vector(31 downto 0); -- address for buffer A
   buff_size   : OUT std_logic_vector(7 downto 0); -- channel a pwm
-  clk_mux     : OUT std_logic; -- clk mux for testing...
   test_en     : OUT std_logic;
   byte_sended : IN std_logic_vector(31 downto 0);
   hp_busy     : IN std_logic;
@@ -239,8 +238,7 @@ END COMPONENT int_ctrl_mic;
           rdata_c(1) <= sts_fin_b;
           rdata_c(2) <= sts_err;
         WHEN C_ADDR_TEST_CTRL =>
-          rdata_c(0) <= reg_s.clk_mux;
-          rdata_c(1) <= reg_s.test_ena;
+          rdata_c(0) <= reg_s.test_ena;
         WHEN C_ADDR_TEST_READ =>
           rdata_c <= x"87115571";
         WHEN others =>
@@ -314,8 +312,7 @@ END COMPONENT int_ctrl_mic;
             sts_fin_clr_b_c <= WDATA(1);
             sts_err_clr_c   <= WDATA(2);
           WHEN C_ADDR_TEST_CTRL =>
-            reg_c.clk_mux  <= WDATA(0);
-            reg_c.test_ena <= WDATA(1);
+            reg_c.test_ena <= WDATA(0);
           WHEN C_ADDR_TEST_READ =>
             -- do nothing register only for read
           WHEN others =>
@@ -348,7 +345,6 @@ END COMPONENT int_ctrl_mic;
   run       <= reg_s.run;
   chann_a   <= reg_s.chann_a;
   chann_b   <= reg_s.chann_b;
-  clk_mux   <= reg_s.clk_mux;
   test_en   <= reg_s.test_ena;
   buff_size <= reg_s.buff_size;
 END ARCHITECTURE RTL;

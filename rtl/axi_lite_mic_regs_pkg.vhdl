@@ -14,7 +14,6 @@ package axi_lite_mic_regs_pkg is
     chann_b   : std_logic_vector(31 downto 0);
     buff_size : std_logic_vector(7 downto 0);
     int_ena   : std_logic;
-    clk_mux   : std_logic;
     test_ena  : std_logic;
   end record t_axi_lite_mic_regs;
 
@@ -25,7 +24,6 @@ package axi_lite_mic_regs_pkg is
              chann_b   => (others => '0'),
              buff_size => (others => '0'),
              int_ena   => '0',
-             clk_mux   => '0',
              test_ena  => '0');
 
     -- reg addresses

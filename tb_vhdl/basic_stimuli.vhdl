@@ -79,7 +79,7 @@ begin
      report "data : run = " & integer'image(to_integer(unsigned(data_read)));
      
      address <= x"00000020";
-     data    <= x"00000002"; -- enable test
+     data    <= x"00000001"; -- enable test
      axi_write(axi_m_in, axi_m_out, address, data);
      
      wait on int for 1500 us;

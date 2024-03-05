@@ -101,7 +101,7 @@ COMPONENT axi_mic IS
   AXI_HP_RDISSUECAP1EN : OUT std_logic;
 
   -- mic
-  audio_clk            : IN std_logic;
+  audio_clk            : OUT std_logic;
   audio_do             : IN std_logic;
 
   -- mic int
@@ -367,17 +367,6 @@ begin
           wait;
         end if;
    end process;   
-
-   clock_audio: process
-     begin
-        clk_audio <= '0';
-        wait for clk_period_25/2;  --
-        clk_audio <= '1';
-        wait for clk_period_25/2;  --
-        if stop_sim = true then
-          wait;
-        end if;
-   end process;
       
 end ARCHITECTURE behavior; 
  

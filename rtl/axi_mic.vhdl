@@ -95,7 +95,7 @@ entity axi_mic IS
   AXI_HP_RDISSUECAP1EN : OUT std_logic;
 
   -- mic
-  audio_clk            : IN std_logic;
+  audio_clk            : OUT std_logic;
   audio_do             : IN std_logic;
 
   -- mic int
@@ -104,19 +104,6 @@ entity axi_mic IS
 END ENTITY axi_mic;
 
 ARCHITECTURE rtl OF axi_mic IS
-
-COMPONENT clk_mux_mic IS
-  generic (
-    G_MUX : boolean := true-- if mux is use
-  );
-  port (
-    clk_int  : IN std_logic;  -- input clk from internal source
-    pclk     : IN std_logic;  -- input clk from external source
-    mux      : IN std_logic;
-    clk_slow : OUT std_logic  -- output to 25mhz clock domain
-
-  );
-END COMPONENT clk_mux_mic;
 
 COMPONENT audio_aquire IS
   generic (
@@ -265,7 +252,6 @@ COMPONENT axi_lite_mic_ctrl_reg IS
   chann_a     : OUT std_logic_vector(31 downto 0); -- address for buffer A
   chann_b     : OUT std_logic_vector(31 downto 0); -- address for buffer A
   buff_size   : OUT std_logic_vector(7 downto 0); -- channel a pwm
-  clk_mux     : OUT std_logic; -- clk mux for testing...
   test_en     : OUT std_logic;
   byte_sended : IN std_logic_vector(31 downto 0);
   hp_busy     : IN std_logic;
@@ -285,7 +271,6 @@ COMPONENT synchronizer is
 end COMPONENT;
   -- clock and reset
   signal clk_slow   : std_logic;
-  signal clk_mux_i  : std_logic;  -- clk mux for testing...
   -- fifo write
   signal data_write : std_logic_vector(63 downto 0);
   signal data_we    : std_logic;
@@ -311,16 +296,8 @@ end COMPONENT;
   signal s_run     : std_logic;
 BEGIN
 
- i_clk_mux : clk_mux_mic
-  generic map(
-    G_MUX => G_TEST
-  )
-  port map(
-    clk_int  => clk_s,     -- input clk from internal source
-    pclk     => audio_clk, -- input clk from external source
-    mux      => clk_mux_i,
-    clk_slow => clk_slow  -- 2.5Mhz clock, internal or external
-  );
+  clk_slow <= clk_s;
+  audio_clk <= clk_slow;
 
   i_audio_aquire : audio_aquire
   generic map(
@@ -393,7 +370,6 @@ i_axi_lite_mic_ctrl_reg : axi_lite_mic_ctrl_reg
   chann_a     => address_a,
   chann_b    => address_b,
   buff_size   => buff_size,
-  clk_mux     => clk_mux_i,
   test_en     => test_en,
   byte_sended => byte_sended,
   hp_busy     => hp_busy,

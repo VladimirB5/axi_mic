@@ -19,7 +19,6 @@ all_test() {
   ghdl -a --std=08 rtl/fir.vhdl
   ghdl -a --std=08 rtl/capture.vhdl
   ghdl -a --std=08 rtl/audio_aquire.vhdl
-  ghdl -a --std=08 tb_vhdl/no_synth/clk_mux_mic.vhdl
   ghdl -a --std=08 rtl/RAM_mic.vhdl
   ghdl -a --std=08 rtl/synchronizer_vector.vhdl
   ghdl -a --std=08 rtl/fifo_write.vhdl

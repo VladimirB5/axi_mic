@@ -75,7 +75,26 @@ END COMPONENT capture;
  signal audio_data    : std_logic_vector(7 downto 0);
  signal dec_valid     : std_logic;
  signal filtered_data : std_logic_vector(7 downto 0);
+ --signal audio_in_vec  : std_logic_vector(7 downto 0);
+ -- register
+ signal audio_in_s : std_logic;
 BEGIN
+  -------------------------------------------------------------------------------
+  -- sequential
+  -------------------------------------------------------------------------------
+  -- capture input data into register on raising edge
+  state_reg : PROCESS (clk, rst_n)
+   BEGIN
+    IF rst_n = '0' THEN
+      audio_in_s <= '0';
+    ELSIF clk = '1' AND clk'EVENT THEN
+      IF en = '1' THEN
+        audio_in_s <= audio_in;
+      END IF;
+    END IF;
+  END PROCESS state_reg;
+
+
  test: if G_TEST = true generate
 
   i_triangle_gen : triangle_gen
@@ -99,23 +118,24 @@ BEGIN
    y_out   => pdm_data
    );
 
-   audio_data_set : process(test_en, pdm_data, audio_in)
-     begin
-     audio_data <= (others => '0');
-     if test_en = '1' then
-       audio_data <= pdm_data;
-     else
-       if audio_in = '1' then
-         audio_data <= (others => '1');
-       end if;
-     end if;
-   end process audio_data_set;
+   -- impl put here 8 flops... I try to do it with one flop but without success
+   --audio_in_vec(0) <= audio_in_s;
+   --audio_in_vec(1) <= audio_in_s;
+   --audio_in_vec(2) <= audio_in_s;
+   --audio_in_vec(3) <= audio_in_s;
+   --audio_in_vec(4) <= audio_in_s;
+   --audio_in_vec(5) <= audio_in_s;
+   --audio_in_vec(6) <= audio_in_s;
+   --audio_in_vec(7) <= audio_in_s;
+
+   audio_data <= pdm_data when test_en = '1' else
+                 audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s;
 
  end generate test;
 
   no_test: if G_TEST = false generate
 
-  audio_data <= (others => '1') when audio_in = '1' else
+  audio_data <= (others => '1') when audio_in_s = '1' else
                 (others => '0');
 
   end generate no_test;
