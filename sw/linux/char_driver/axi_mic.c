@@ -56,12 +56,10 @@
 #define C_BIT_STS_ERR_MASK     0x00000002
 #define C_BIT_STS_ERR_POS      1
 // C_ADDR_TEST_CTRL
-#define C_BIT_CLK_MUX_MASK     0x00000001
-#define C_BIT_CLK_MUX_POS      0
-#define C_BIT_TEST_EN_MASK     0x00000002
-#define C_BIT_TEST_EN_POS      1
+#define C_BIT_TEST_EN_MASK     0x00000001
+#define C_BIT_TEST_EN_POS      0
 
-#define  C_NUM_REG 9               // number of readable registers
+#define  C_NUM_REG 9           // number of readable registers
 #define  C_FRAME_SIZE          0x4000// 640 * 480 * 2
 
 /* Use '81' as magic number */
@@ -76,9 +74,8 @@
 #define AXI_MIC_BUFF_SIZE     _IOW(AXI_MIC_MAGIC, 5, int)
 #define AXI_MIC_INT_ENA       _IOW(AXI_MIC_MAGIC, 6, int)
 #define AXI_MIC_INT_STS       _IOW(AXI_MIC_MAGIC, 7, int)
-#define AXI_MIC_CLK_MUX       _IOW(AXI_MIC_MAGIC, 8, int)
-#define AXI_MIC_TEST_ENA      _IOW(AXI_MIC_MAGIC, 9, int)
-#define AXI_MIC_USER_SIG      _IOW(AXI_MIC_MAGIC, 10, int)
+#define AXI_MIC_TEST_ENA      _IOW(AXI_MIC_MAGIC, 8, int)
+#define AXI_MIC_USER_SIG      _IOW(AXI_MIC_MAGIC, 9, int)
 
 MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
 MODULE_AUTHOR("Vladimir Beran");    ///< The author -- visible when you use modinfo
@@ -375,24 +372,13 @@ static long dev_ioctl(struct file *filep, unsigned int _cmd, unsigned long _arg)
           wmb();
           return 0;
         }
-        case AXI_MIC_CLK_MUX: // diagnostic control - clock mux
-        {    
-          data = readl(virt+C_ADDR_TEST_CTRL);
-          if (_arg > 0)
-            data = data | C_BIT_CLK_MUX_MASK;  // set clk_mux to 1
-          else     
-            data = data & (~C_BIT_CLK_MUX_MASK); // set clk_mux to 0
-          writel(data ,virt + C_ADDR_TEST_CTRL);
-          wmb();
-          return 0;
-        } 
         case AXI_MIC_TEST_ENA: // diagnostic control - test ena
         {    
           data = readl(virt+C_ADDR_TEST_CTRL);
           if (_arg > 0)
-            data = data | C_BIT_TEST_EN_MASK;  // set test ena
+            data = C_BIT_TEST_EN_MASK;  // set test ena
           else     
-            data = data & (~C_BIT_TEST_EN_MASK); // clear test ena
+            data = 0x00; // clear test ena
           writel(data ,virt + C_ADDR_TEST_CTRL);
           wmb();
           return 0;
