@@ -28,7 +28,11 @@ ARCHITECTURE behavior OF mic_model IS-------------------------------------------
        wait for 1 ns;
        readline(file_RESULTS,v_OLINE);
        read(v_OLINE,v_data_read);
-       audio_do <= std_logic(unsigned(v_data_read));
+       if v_data_read = 1 then
+         audio_do <= '1';
+       else
+         audio_do <= '0';
+       end if;
        wait until audio_clk = '0';
      end loop;
      file_close(file_RESULTS);

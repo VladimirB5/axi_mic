@@ -6,8 +6,8 @@ block_test_t() {
   ghdl -a --std=08 rtl/fir.vhdl
   ghdl -a --std=08 rtl/capture.vhdl
   ghdl -a --std=08 tb_block/tb_triangle_gen.vhdl
-  ghdl -e --std=08 tb_top
-  ghdl -r --std=08 tb_top --wave=block_triangle_tb.ghw
+  ghdl -e --std=08 tb_triangle_gen
+  ghdl -r --std=08 tb_triangle_gen --wave=block_triangle_tb.ghw
 }
 
 block_test_mic() {
@@ -15,8 +15,8 @@ block_test_mic() {
   ghdl -a --std=08 rtl/fir.vhdl
   ghdl -a --std=08 rtl/capture.vhdl
   ghdl -a --std=08 tb_block/tb_mic.vhdl
-  ghdl -e --std=08 tb_top
-  ghdl -r --std=08 tb_top --wave=block_mic_tb.ghw
+  ghdl -e --std=08 tb_mic
+  ghdl -r --std=08 tb_mic --wave=block_mic_tb.ghw
 }
 
 all_test() {
