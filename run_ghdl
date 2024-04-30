@@ -1,13 +1,22 @@
 #!/bin/bash
 
-block_test() {
+block_test_t() {
   ghdl -a --std=08 rtl/triangle_gen.vhdl
   ghdl -a --std=08 rtl/pdm.vhdl
   ghdl -a --std=08 rtl/fir.vhdl
   ghdl -a --std=08 rtl/capture.vhdl
-  ghdl -a --std=08 tb_block/tb_top.vhdl
+  ghdl -a --std=08 tb_block/tb_triangle_gen.vhdl
   ghdl -e --std=08 tb_top
-  ghdl -r --std=08 tb_top --wave=case1_tb.ghw
+  ghdl -r --std=08 tb_top --wave=block_triangle_tb.ghw
+}
+
+block_test_mic() {
+  ghdl -a --std=08 tb_block/mic_model.vhdl
+  ghdl -a --std=08 rtl/fir.vhdl
+  ghdl -a --std=08 rtl/capture.vhdl
+  ghdl -a --std=08 tb_block/tb_mic.vhdl
+  ghdl -e --std=08 tb_top
+  ghdl -r --std=08 tb_top --wave=block_mic_tb.ghw
 }
 
 all_test() {
@@ -52,12 +61,18 @@ start_stop_test() {
   ghdl -r --std=08 tb_top --wave=start_stop_tb.ghw
 }
 
-while getopts ":a:bc:" flag;do
-    #echo "flag -$flag, Argument $OPTARG";
+while getopts ":a:b:c:" flag;do
+    echo "flag -$flag, Argument $OPTARG";
 
     case $flag in
-      b) echo "Starting block test..."
-         block_test
+      b)if [[ $OPTARG == "t" ]]; then
+           echo "Starting triangle block test..."
+           block_test_t
+        fi
+        if [[ $OPTARG == "mic" ]]; then
+           echo "Starting mic block test..."
+           block_test_mic
+        fi
        ;;
 
       a)if [[ $OPTARG == "basic" ]]; then
