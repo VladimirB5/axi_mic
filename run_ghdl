@@ -16,7 +16,7 @@ block_test_mic() {
   ghdl -a --std=08 rtl/capture.vhdl
   ghdl -a --std=08 tb_block/tb_mic.vhdl
   ghdl -e --std=08 tb_mic
-  ghdl -r --std=08 tb_mic --wave=block_mic_tb.ghw
+  ghdl -r --std=08 tb_mic #--wave=block_mic_tb.ghw
 }
 
 all_test() {

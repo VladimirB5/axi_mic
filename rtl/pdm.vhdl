@@ -11,7 +11,7 @@ entity pdm IS
 
    run     : in std_logic;
    x_in    : in std_logic_vector(7 downto 0);
-   y_out   : out std_logic_vector(7 downto 0));
+   y_out   : out std_logic);
 END ENTITY pdm;
 
 
@@ -39,6 +39,6 @@ begin
  error_c <= (y_c - unsigned(x_in)) + error_s;
 
  -- output assigment
- y_out <= std_logic_vector(y_s);
+ y_out <= std_logic(y_s(0));
 
 END ARCHITECTURE RTL;

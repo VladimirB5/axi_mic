@@ -35,7 +35,7 @@ pdm_sig, error = (pdm(yy))
 f = open("pdm.txt", "w")
 for x in pdm_sig:
     if (x == -1):
-      f.writelines('0' + "\n")
+      f.writelines('-1' + "\n")
     else:
       f.writelines('1' + "\n")
 f.close()

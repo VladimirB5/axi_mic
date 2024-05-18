@@ -7,10 +7,10 @@ use IEEE.numeric_std.all;
 --library work;
 --use work.tb_top_pkg.all;
 
-ENTITY tb_top IS
-END ENTITY tb_top;
+ENTITY tb_triangle_gen IS
+END ENTITY tb_triangle_gen;
 
-ARCHITECTURE behavior OF tb_top IS------------------------------------------------------------------------------
+ARCHITECTURE behavior OF tb_triangle_gen IS------------------------------------------------------------------------------
 
 
 COMPONENT triangle_gen IS
@@ -25,23 +25,26 @@ END COMPONENT triangle_gen;
 
 
 COMPONENT pdm IS
-  port (
+  port(
    rst_n   : in std_logic;
    clk     : in std_logic;
    en      : in std_logic;
 
    run     : in std_logic;
    x_in    : in std_logic_vector(7 downto 0);
-   y_out   : out std_logic_vector(7 downto 0));
+   y_out   : out std_logic);
 END COMPONENT pdm;
 
 COMPONENT fir IS
+  generic (
+    filter_taps : natural := 101
+  );
   port (
    rst_n : in std_logic;
    clk   : in std_logic;
    en    : in std_logic;
 
-   data_in   : in std_logic_vector(7 downto 0);
+   data_in   : in std_logic;
    dec_valid : out std_logic;
    data_out  : out std_logic_vector(7 downto 0));
 END COMPONENT fir;
@@ -68,7 +71,7 @@ END COMPONENT capture;
    signal en     : std_logic := '0';
    signal rst_n  : std_logic := '0';
    signal triangle_data : std_logic_vector(7 downto 0);
-   signal pdm_data : std_logic_vector(7 downto 0);
+   signal pdm_data : std_logic;
    signal data_out : std_logic_vector(7 downto 0);
    signal dec_valid : std_logic;
    -- control signals
@@ -102,6 +105,9 @@ begin
    );
 
    i_fir : fir
+   generic map (
+   filter_taps => 101
+   )
    port map (
    rst_n => rst_n,
    clk   => clk_25,

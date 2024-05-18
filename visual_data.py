@@ -1,7 +1,7 @@
 import sounddevice as sd
 import time
 import numpy as np
-#from bitstring import BitArray
+from bitstring import BitArray
 import matplotlib.pyplot as plt
 from scipy.signal import lfilter, firwin
 
@@ -14,8 +14,8 @@ def read_file_plot(name_file):
  for line in Lines:
     count += 1
     print("Line{}: {}".format(count, line.strip()))
-    #value = BitArray(bin=line).int
-    value = int(line, 2)
+    value = BitArray(bin=line).int # signed value
+    #value = int(line, 2) #unsigned
     a.append(value)
     #print(value)
 
@@ -28,5 +28,5 @@ def read_file_plot(name_file):
  plt.legend()
  plt.show()
 
-read_file_plot('output_results.txt')
-read_file_plot('output_results_dec.txt')
+read_file_plot('fir_dec.txt')
+#read_file_plot('output_results_dec.txt')

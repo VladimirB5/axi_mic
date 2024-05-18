@@ -16,17 +16,21 @@ COMPONENT mic_model IS
   port (
   -- mic
   audio_clk            : IN std_logic;
-  audio_do             : OUT std_logic
+  audio_do             : OUT std_logic;
+  read_done            : OUT std_logic
   );
 END COMPONENT mic_model;
 
 COMPONENT fir IS
+  generic (
+    filter_taps : natural := 101
+  );
   port (
    rst_n : in std_logic;
    clk   : in std_logic;
    en    : in std_logic;
 
-   data_in   : in std_logic_vector(7 downto 0);
+   data_in   : in std_logic;
    dec_valid : out std_logic;
    data_out  : out std_logic_vector(7 downto 0));
 END COMPONENT fir;
@@ -58,7 +62,8 @@ END COMPONENT capture;
    signal audio_do : std_logic;
    -- control signals
    signal stop_sim: boolean := false;
-   signal p : std_logic;
+   signal read_done : std_logic;
+   signal close_file : std_logic;
 
    file file_RESULTS : text;
    file file_RESULTS_DEC : text;
@@ -68,20 +73,20 @@ begin
    i_mic_model : mic_model
    port map (
       audio_clk => clk_25,
-      audio_do  => audio_do
+      audio_do  => audio_do,
+      read_done => read_done
    );
 
-   pdm_data <= (others => '1') when audio_do = '1' else
-               (others => '0');
-
-
    i_fir : fir
+   generic map (
+   filter_taps => 101
+   )
    port map (
    rst_n => rst_n,
    clk   => clk_25,
    en    => en,
 
-   data_in  => pdm_data,
+   data_in  => audio_do,
    dec_valid => dec_valid,
    data_out => data_out
    );
@@ -130,31 +135,46 @@ begin
    end process;
 
    stimuli: process
+     variable k : integer;
      begin
+     k := 0;
+     close_file <= '0';
      wait for 10 ns;
      rst_n <= '1';
      wait for 100 ns;
      en <= '1';
      run <= '1';
-     wait for 5000 us;
-     stop_sim <= true;
+     loop
+       if (read_done = '0') then
+          wait for 1 ms;
+          k := k + 1;
+          report "1ms loop " & integer'image(k);
+       else
+         exit;
+       end if;
+     end loop;
+     close_file <= '1';
      wait;
    end process;
 
    write_results_dec: process
    variable v_OLINE : line;
    begin
-     file_open(file_RESULTS_DEC, "output_results_dec.txt", write_mode);
+     file_open(file_RESULTS_DEC, "fir_dec.txt", write_mode);
 
      wait until rst_n = '1' and run = '1';
-     for k in 0 to 223 loop --
+     loop
        wait until dec_valid = '1';
        wait for 1 ns;
        write(v_OLINE, data_out, right, 8);
        --write(line_var, integer'image(to_integer(unsigned(data_out))));
        writeline(file_RESULTS_DEC, v_OLINE);
+       if close_file = '1' then
+         exit;
+       end if;
      end loop;
      file_close(file_RESULTS_DEC);
+     stop_sim <= true;
      wait;
    end process;
 
