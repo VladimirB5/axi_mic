@@ -193,7 +193,7 @@ begin
    write_results_dec: process
    variable v_OLINE : line;
    begin
-     file_open(file_RESULTS_DEC, "output_results_dec.txt", write_mode);
+     file_open(file_RESULTS_DEC, "fir_dec.txt", write_mode);
 
      wait until rst_n = '1' and run = '1';
      for k in 0 to 223 loop --
