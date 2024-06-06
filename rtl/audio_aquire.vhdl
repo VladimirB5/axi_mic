@@ -41,16 +41,19 @@ COMPONENT pdm IS
 
    run     : in std_logic;
    x_in    : in std_logic_vector(7 downto 0);
-   y_out   : out std_logic_vector(7 downto 0));
+   y_out   : out std_logic);
 END COMPONENT pdm;
 
 COMPONENT fir IS
+  generic (
+    filter_taps : natural := 101
+  );
   port (
    rst_n : in std_logic;
    clk   : in std_logic;
    en    : in std_logic;
 
-   data_in   : in std_logic_vector(7 downto 0);
+   data_in   : in std_logic;
    dec_valid : out std_logic;
    data_out  : out std_logic_vector(7 downto 0));
 END COMPONENT fir;
@@ -71,8 +74,8 @@ COMPONENT capture IS
 END COMPONENT capture;
  -- interconnect signals
  signal triangle_data : std_logic_vector(7 downto 0);
- signal pdm_data      : std_logic_vector(7 downto 0);
- signal audio_data    : std_logic_vector(7 downto 0);
+ signal pdm_data      : std_logic;
+ signal audio_data    : std_logic;
  signal dec_valid     : std_logic;
  signal filtered_data : std_logic_vector(7 downto 0);
  --signal audio_in_vec  : std_logic_vector(7 downto 0);
@@ -118,25 +121,14 @@ BEGIN
    y_out   => pdm_data
    );
 
-   -- impl put here 8 flops... I try to do it with one flop but without success
-   --audio_in_vec(0) <= audio_in_s;
-   --audio_in_vec(1) <= audio_in_s;
-   --audio_in_vec(2) <= audio_in_s;
-   --audio_in_vec(3) <= audio_in_s;
-   --audio_in_vec(4) <= audio_in_s;
-   --audio_in_vec(5) <= audio_in_s;
-   --audio_in_vec(6) <= audio_in_s;
-   --audio_in_vec(7) <= audio_in_s;
-
    audio_data <= pdm_data when test_en = '1' else
-                 audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s & audio_in_s;
+                 audio_in_s;
 
  end generate test;
 
   no_test: if G_TEST = false generate
 
-  audio_data <= (others => '1') when audio_in_s = '1' else
-                (others => '0');
+  audio_data <= audio_in_s;
 
   end generate no_test;
 

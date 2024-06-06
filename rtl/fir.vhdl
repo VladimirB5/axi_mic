@@ -66,21 +66,18 @@ ARCHITECTURE rtl OF fir IS
         add_results_s(i) <= (others => '0');
       end loop;
       valid_cnt_s <= (others => '0');
-      data_in_s <= '0';
     ELSIF clk = '1' AND clk'EVENT THEN
       IF en = '1' THEN
         for i in 0 to filter_taps-1 loop
           add_results_s(i) <= add_results_c(i);
         end loop;
         valid_cnt_s <= valid_cnt_c;
-        data_in_s <= data_in_c;
       END IF;
     END IF;
  END PROCESS reg;
 
- data_in_c <= data_in;
-
- data <= to_signed(1,8) when data_in_s = '1' else
+ -- data_in is already registered in audio_aquire.vhdl
+ data <= to_signed(1,8) when data_in = '1' else
          to_signed(-1,8);
 
   G_1 : for I in 0 to filter_taps-2 generate
